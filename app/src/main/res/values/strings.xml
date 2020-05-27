@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">MyFirstAppLogin</string>
+    <string name="fieldLogin">Login</string>
+    <string name="auto_password">Password</string>
+    <string name="textLogin">Войти</string>
+    <string name="textRegister">Зарегистрироваться</string>
+    <string name="messageError">Ошибка ввода</string>
+    <string name="email">Email</string>
+</resources>
