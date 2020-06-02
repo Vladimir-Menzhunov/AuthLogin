@@ -6,4 +6,5 @@
     <string name="textRegister">Зарегистрироваться</string>
     <string name="messageError">Ошибка ввода</string>
     <string name="email">Email</string>
+    <string name="password_again">Password again</string>
 </resources>

@@ -7,11 +7,12 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.example.myfirstapplogin.user.User;
+
 public class ProfileActivity extends AppCompatActivity {
 
 
-    public static String EXTRA_EMAIL = "EXTRA_EMAIL";
-    public static String EXTRA_PASSWORD = "EXTRA_PASSWORD";
+    public static String EXTRA_USER_KEY = "EXTRA_USER_KEY";
 
     private Bundle extraBundle;
 
@@ -40,8 +41,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         extraBundle = getIntent().getExtras();
 
-        tEmail.setText(extraBundle.getString(EXTRA_EMAIL));
-        tPassword.setText(extraBundle.getString(EXTRA_PASSWORD));
+        User user = (User) extraBundle.get(EXTRA_USER_KEY);
+
+        assert user != null;
+        tEmail.setText(user.getEmail());
+
+        tPassword.setText(user.getPassword());
 
 
         image.setOnClickListener(onClickListenerImage);
