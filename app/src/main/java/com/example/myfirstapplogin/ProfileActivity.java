@@ -1,9 +1,14 @@
 package com.example.myfirstapplogin;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -50,5 +55,26 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         image.setOnClickListener(onClickListenerImage);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.profile_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch(item.getItemId()) {
+            case R.id.logout:
+                startActivity(new Intent(this, AuthActivity.class));
+                finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

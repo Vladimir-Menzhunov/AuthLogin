@@ -7,4 +7,8 @@
     <string name="messageError">Ошибка ввода</string>
     <string name="email">Email</string>
     <string name="password_again">Password again</string>
+    <string name="red_succcessfylly">Успешно</string>
+    <string name="reg_error">Пользователь уже существует</string>
+    <string name="error_Login_Password">Неверный Login или Password</string>
+    <string name="logout">Logout</string>
 </resources>

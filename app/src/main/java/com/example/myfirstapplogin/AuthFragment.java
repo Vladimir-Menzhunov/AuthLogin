@@ -19,6 +19,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myfirstapplogin.user.User;
+import com.google.gson.Gson;
+
+import java.util.List;
+import java.util.Objects;
 
 public class AuthFragment extends Fragment {
 
@@ -27,7 +31,7 @@ public class AuthFragment extends Fragment {
 
     private Button mEnter;
     private Button mRegister;
-
+    private SharedPreferenceHelper sharedPreferenceHelper;
 
 
     @Nullable
@@ -35,6 +39,9 @@ public class AuthFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.ac_auto, container, false);
+
+        sharedPreferenceHelper = new SharedPreferenceHelper(getActivity());
+
 
         etEmail = view.findViewById(R.id.etLogin);
         etPassword = view.findViewById(R.id.etPassword);
@@ -51,18 +58,33 @@ public class AuthFragment extends Fragment {
     private View.OnClickListener mOnEnterClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            boolean checkEnter = false;
             if(checkLogin() && checkPassword()) {
-                Intent  startPorfileIntent = new Intent(getActivity(), ProfileActivity.class);
 
-                startPorfileIntent.putExtra(ProfileActivity.EXTRA_USER_KEY,
-                        new User(etEmail.getText().toString(), etPassword.getText().toString()));
+                    List<User> users = sharedPreferenceHelper.getUsers();
+                    for(User u : users) {
+                        if(u.getEmail().equalsIgnoreCase(etEmail.getText().toString())
+                        && u.getPassword().equals(etPassword.getText().toString())) {
+                            Intent startPorfileIntent = new Intent(getActivity(), ProfileActivity.class);
+                            startPorfileIntent.putExtra(ProfileActivity.EXTRA_USER_KEY,
+                                    new User(etEmail.getText().toString(), etPassword.getText().toString()));
+                            startActivity(startPorfileIntent);
+                            checkEnter = true;
+                            Objects.requireNonNull(getActivity()).finish();
+                            break;
+                        }
+                    }
 
-                startActivity(startPorfileIntent);
+                    if(!checkEnter) showMessage(R.string.error_Login_Password);
+                    else showMessage(R.string.red_succcessfylly);
+
             } else {
                 showMessage(R.string.messageError);
             }
         }
     };
+
+
 
     static AuthFragment newInstance() {
 
@@ -96,7 +118,7 @@ public class AuthFragment extends Fragment {
     }
 
     private void showMessage(@StringRes int string) {
-        Toast.makeText(getActivity(), string, Toast.LENGTH_LONG).show();
+        Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
     }
 
 }
