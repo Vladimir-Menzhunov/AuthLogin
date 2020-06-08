@@ -1,6 +1,8 @@
 package com.example.myfirstapplogin;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,6 +11,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 
@@ -18,10 +21,11 @@ public class ProfileActivity extends AppCompatActivity {
 
 
     public static String EXTRA_USER_KEY = "EXTRA_USER_KEY";
+    public static int REQUESTCODE_GET_PHOTO = 77;
 
     private Bundle extraBundle;
 
-    private AppCompatImageView image;
+    private AppCompatImageView myImage;
 
     private TextView tEmail;
     private TextView tPassword;
@@ -30,19 +34,36 @@ public class ProfileActivity extends AppCompatActivity {
     private View.OnClickListener onClickListenerImage = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            //todo
+            openGallery();
         }
     };
 
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUESTCODE_GET_PHOTO);
+    }
 
-    @Override   
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if(REQUESTCODE_GET_PHOTO == requestCode
+            && resultCode == Activity.RESULT_OK
+            && data != null) {
+            Uri img = data.getData();
+            myImage.setImageURI(img);
+        } else super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ac_profile);
         
         tEmail = findViewById(R.id.textViewChangeEmail);
         tPassword = findViewById(R.id.textViewChangePassword);
-        image = findViewById(R.id.imageView);
+        myImage = findViewById(R.id.imageView);
 
         extraBundle = getIntent().getExtras();
 
@@ -54,7 +75,7 @@ public class ProfileActivity extends AppCompatActivity {
         tPassword.setText(user.getPassword());
 
 
-        image.setOnClickListener(onClickListenerImage);
+        myImage.setOnClickListener(onClickListenerImage);
     }
 
     @Override
