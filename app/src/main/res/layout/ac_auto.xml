@@ -2,8 +2,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/gradient_background">
 
 
     <AutoCompleteTextView
@@ -30,17 +31,23 @@
         android:orientation="horizontal">
 
         <Button
+            android:layout_marginRight="2.5dp"
+            android:layout_marginLeft="5dp"
             android:id="@+id/buttonEnter"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/textLogin"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:background="@color/macasin"/>
         <Button
+            android:layout_marginLeft="2.5dp"
+            android:layout_marginRight="5dp"
             android:id="@+id/buttonRegister"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/textRegister"
-            android:layout_width="match_parent" />
+            android:layout_width="match_parent"
+            android:background="@color/macasin"/>
 
     </LinearLayout>
 </LinearLayout>
