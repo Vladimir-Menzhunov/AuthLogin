@@ -5,11 +5,12 @@ import java.io.Serializable;
 public class User implements Serializable {
     private String email;
     private String password;
-
+    private boolean isAuth;
 
     public User(String email, String password) {
         this.email = email;
         this.password = password;
+        isAuth = false;
     }
 
     public String getEmail() {
@@ -28,5 +29,11 @@ public class User implements Serializable {
         this.password = password;
     }
 
+    public boolean isAuth() {
+        return isAuth;
+    }
 
+    public void setAuth(boolean auth) {
+        isAuth = auth;
+    }
 }

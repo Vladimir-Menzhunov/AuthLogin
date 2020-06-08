@@ -14,24 +14,26 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.myfirstapplogin.user.User;
-import com.google.gson.Gson;
 
-import java.util.List;
 import java.util.Objects;
 
 public class AuthFragment extends Fragment {
 
-    private EditText etEmail;
+    private AutoCompleteTextView etEmail;
     private EditText etPassword;
 
     private Button mEnter;
     private Button mRegister;
     private SharedPreferenceHelper sharedPreferenceHelper;
+
+    private ArrayAdapter<String> usersAdapter;
 
 
     @Nullable
@@ -42,49 +44,64 @@ public class AuthFragment extends Fragment {
 
         sharedPreferenceHelper = new SharedPreferenceHelper(getActivity());
 
-
         etEmail = view.findViewById(R.id.etLogin);
         etPassword = view.findViewById(R.id.etPassword);
+
+
 
         mEnter = view.findViewById(R.id.buttonEnter);
         mRegister = view.findViewById(R.id.buttonRegister);
 
         mEnter.setOnClickListener(mOnEnterClickListener);
         mRegister.setOnClickListener(mOnRegisterClickListener);
+        etEmail.setOnFocusChangeListener(onFocusChangeListener);
+
+        usersAdapter = new ArrayAdapter<>(
+                getActivity(),
+                android.R.layout.simple_dropdown_item_1line,
+                sharedPreferenceHelper.getSuccessLogin()
+        );
+
+        etEmail.setAdapter(usersAdapter);
+
 
         return view;
     }
+
+    private View.OnFocusChangeListener onFocusChangeListener = new View.OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if(hasFocus) etEmail.showDropDown();
+        }
+    };
 
     private View.OnClickListener mOnEnterClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             boolean checkEnter = false;
-            if(checkLogin() && checkPassword()) {
+            if (checkLogin() && checkPassword()) {
 
-                    List<User> users = sharedPreferenceHelper.getUsers();
-                    for(User u : users) {
-                        if(u.getEmail().equalsIgnoreCase(etEmail.getText().toString())
-                        && u.getPassword().equals(etPassword.getText().toString())) {
-                            Intent startPorfileIntent = new Intent(getActivity(), ProfileActivity.class);
-                            startPorfileIntent.putExtra(ProfileActivity.EXTRA_USER_KEY,
-                                    new User(etEmail.getText().toString(), etPassword.getText().toString()));
-                            startActivity(startPorfileIntent);
-                            checkEnter = true;
-                            Objects.requireNonNull(getActivity()).finish();
-                            break;
-                        }
-                    }
+                User user = sharedPreferenceHelper.login(etEmail.getText().toString(), etPassword.getText().toString());
 
-                    if(!checkEnter) showMessage(R.string.error_Login_Password);
-                    else showMessage(R.string.red_succcessfylly);
+                if (user != null) {
+
+                    Intent startPorfileIntent = new Intent(getActivity(), ProfileActivity.class);
+                    startPorfileIntent.putExtra(ProfileActivity.EXTRA_USER_KEY,
+                            new User(etEmail.getText().toString(), etPassword.getText().toString()));
+                    startActivity(startPorfileIntent);
+                    checkEnter = true;
+                    Objects.requireNonNull(getActivity()).finish();
+
+                }
+                if (!checkEnter) showMessage(R.string.error_Login_Password);
+                else showMessage(R.string.red_succcessfylly);
 
             } else {
                 showMessage(R.string.messageError);
             }
         }
+
     };
-
-
 
     static AuthFragment newInstance() {
 
@@ -120,5 +137,6 @@ public class AuthFragment extends Fragment {
     private void showMessage(@StringRes int string) {
         Toast.makeText(getActivity(), string, Toast.LENGTH_SHORT).show();
     }
+
 
 }
